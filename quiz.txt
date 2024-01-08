@@ -1,0 +1,131 @@
+Question.dart:
+
+class question{
+ final String questiontext;
+ final bool answer;
+ question({required this.questiontext, required this.answer});
+ 
+}
+
+Main.dart:
+
+import 'package:flutter/material.dart';
+import 'package:quizapp/question.dart';
+class Questions{
+ List<question>questionbank = [
+ question(questiontext: "question 1", answer: true),
+ question(questiontext: "question 2", answer: false),
+ question(questiontext: "question 3", answer: true),
+ question(questiontext: "question 4", answer: false),
+ question(questiontext: "question 5", answer: true),
+ question(questiontext: "question 6", answer: false),
+ question(questiontext: "question 7", answer: true),
+ ];
+}
+void main() {
+ runApp(MaterialApp(
+ home: SafeArea(
+ child: Scaffold(
+ body: Quizpage(),
+ ),
+ ),
+ ),);
+}
+class Quizpage extends StatefulWidget {
+ const Quizpage({super.key});
+ @override
+ State<Quizpage> createState() => _QuizpageState();
+}
+class _QuizpageState extends State<Quizpage> {
+ int questionnumber = 0;
+ int currentscore = 0 ;
+ Questions questions = Questions();
+ void updatequestionNumber(){
+ setState(() {
+ questionnumber = questionnumber + 1;
+ print('$questionnumber');
+ });
+ }
+ void updatescore(bool choice, int question_number){
+ if(questions.questionbank.length == question_number){
+ print("end of questions");
+ }else{
+ if(questions.questionbank[question_number].answer == choice){
+ setState(() {
+ currentscore++;
+ });
+ }
+ }
+ }
+ bool checkquestionnumber(int questionNumber){
+ return questionNumber < questions.questionbank.length ? true :false;
+ }
+ @override
+ Widget build(BuildContext context) {
+ return Center(
+ child: Container(
+ child: Column(
+ children: [
+ Center(
+ child: 
+Text(checkquestionnumber(questionnumber)?questions.questionbank[questionnumber].questi
+ontext.toString():"end",style: TextStyle(fontSize: 40.0),
+ ),
+ ),
+ SizedBox(
+ height: 20.0
+ ),
+ if(checkquestionnumber(questionnumber))
+ ElevatedButton(onPressed: (){
+ setState(() {
+ if(questionnumber == questions.questionbank.length){
+ print('end of question');
+ }
+ else{
+ updatescore(true, questionnumber);
+ updatequestionNumber();
+ }
+ });
+ }, child: Text('true')),
+ if(checkquestionnumber(questionnumber))
+ ElevatedButton(onPressed: (){
+ setState(() {
+ if(questionnumber == questions.questionbank.length){
+ print('end of question');
+ }
+ else{
+ updatescore(false, questionnumber);
+ updatequestionNumber();
+ }
+ });
+ }, child: Text('false')),
+ SizedBox(
+ height: 100.0,
+ ),
+ SizedBox(
+ height: 50.0,
+ ),
+ Padding(
+ padding: const EdgeInsets.all(30.0),
+ child: Center(
+ child: Text(
+ "current score is: ",
+ style: TextStyle(fontSize: 30),
+ ),
+ ),
+ ),
+ Padding(
+ padding:const EdgeInsets.all(30.0),
+ child: Center(
+ child: Text(
+ '$currentscore',
+ style: TextStyle(fontSize: 30),
+ ),
+ ),
+ ),
+ ],
+ ),
+ ),
+ );
+ }
+}
