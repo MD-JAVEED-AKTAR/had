@@ -1,0 +1,88 @@
+import androidx.appcompat.app.AppCompatActivity; 
+import android.media.MediaPlayer;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button; import android.widget.Toast;
+
+public class MainActivity extends AppCompatActivity {
+Button play,forward,backward,reset,pause,stop; MediaPlayer mediaPlayer;
+ 
+int startTime=0; 
+int stopTime=0;
+int forwardTime=5000; 
+int backwardTime=5000; 
+int currentPaused = 0;
+int flag=0;
+@Override
+protected void onCreate(Bundle savedInstanceState) { 
+super.onCreate(savedInstanceState); 
+setContentView(R.layout.activity_main);
+
+play= findViewById(R.id.play);
+reset= findViewById(R.id.restart);
+forward = findViewById(R.id.forward);
+backward = findViewById(R.id.rewind); 
+pause = findViewById(R.id.pause);
+stop = findViewById(R.id.stopplayer);
+
+play.setOnClickListener(new View.OnClickListener() { 
+@Override
+public void onClick(View view) {
+Toast.makeText(MainActivity.this,"playing media now",Toast.LENGTH_SHORT).show();
+mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.song); if(flag == 0){
+mediaPlayer.start();
+}
+else{
+mediaPlayer.seekTo(currentPaused); mediaPlayer.start();
+}
+
+}
+});
+
+reset.setOnClickListener(new View.OnClickListener() { 
+@Override
+public void onClick(View view) {
+mediaPlayer.seekTo(startTime);
+mediaPlayer.start();
+}
+});
+
+forward.setOnClickListener(new View.OnClickListener() { @Override
+public void onClick(View view) {
+ 
+int currentPos = mediaPlayer.getCurrentPosition();
+if((currentPos+forwardTime)<=(stopTime=mediaPlayer.getDuration())){
+mediaPlayer.seekTo(currentPos+forwardTime);
+}
+}
+});
+
+backward.setOnClickListener(new View.OnClickListener() { @Override
+public void onClick(View view) {
+int currentPos = mediaPlayer.getCurrentPosition();
+if((currentPos-backwardTime)>startTime){
+mediaPlayer.seekTo(currentPos-backwardTime);
+}
+else{
+mediaPlayer.seekTo(startTime);
+}
+}
+});
+
+pause.setOnClickListener(new View.OnClickListener()
+{ @Override
+public void onClick(View v) { mediaPlayer.pause();
+currentPaused = mediaPlayer.getCurrentPosition(); 
+flag=1;
+}
+});
+
+stop.setOnClickListener(new View.OnClickListener() {
+@Override
+public void onClick(View v) { 
+mediaPlayer.stop();
+}
+});
+
+}
+}
